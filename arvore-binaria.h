@@ -1,8 +1,7 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include "lista-encadeada.h"
 
 typedef struct noA {
-    char info;
+    int info;
     struct noA *esq;
     struct noA *dir;
 } TNoA;
@@ -10,5 +9,6 @@ typedef struct noA {
 TNoA *inicializa_A(void);
 void imprime_A(TNoA *nodo, int tab);
 void posOrdem(TNoA* a);
-TNoA *criaNo(char ch);
-TNoA *criaArvoreAleatoria(TNoA *r, int *count, int n);
+TNoA *criaNo(int a);
+TNoA *insere(TNoA *r, int a);
+TNoA *criaArvoreAleatoria(TNoA *r, int n);

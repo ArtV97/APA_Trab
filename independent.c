@@ -1,9 +1,10 @@
 #include "independent.h"
 
 
-Ind *inicializaInd(int value, int fEsq, int fDir){
+Ind *inicializaInd(int value, int elem, int fEsq, int fDir){
 	Ind *novo = (Ind*)malloc(sizeof(Ind));
 	novo->value = value;
+	novo->elem = elem;
 	novo->fEsq = fEsq;
 	novo->fDir = fDir;
 	return novo;
@@ -37,8 +38,8 @@ int preenchePosOrdem(Ind **v, TNoA *r, int *pos){
 	if (r != NULL){
 		int f_esq = preenchePosOrdem(v, r->esq, pos); //posicao do filho da esq no vetor
 		int f_dir = preenchePosOrdem(v, r->dir, pos); //posicao do filho da dir no vetor
-		*pos += 1; //posicao do nó no vetor
-		v[*pos] = inicializaInd(0, f_esq, f_dir);
+		*pos += 1; //posicao do no em v
+		v[*pos] = inicializaInd(0, r->info, f_esq, f_dir);
 
 		int netos = 1;
 		netos += v[v[v[*pos]->fEsq]->fEsq]->value;
@@ -62,18 +63,42 @@ int preenchePosOrdem(Ind **v, TNoA *r, int *pos){
 }
 
 
+void encontraConj(Ind **v, listaEnc *conjI, int n){ //encontrando o conj independente
+	if(n != 0){
+		if(v[n]->value == v[v[n]->fEsq]->value + v[v[n]->fDir]->value){
+			//adicionar filhos
+			encontraConj(v, conjI, v[n]->fEsq);
+			encontraConj(v, conjI, v[n]->fDir);
+		}
+		else{
+			//adiciona netos
+			insereIni(conjI, v[n]->elem);
+			encontraConj(v, conjI, v[v[n]->fEsq]->fEsq);
+			encontraConj(v, conjI, v[v[n]->fEsq]->fDir);
+			encontraConj(v, conjI, v[v[n]->fDir]->fEsq);
+			encontraConj(v, conjI, v[v[n]->fDir]->fDir);
+		}
+	}
+}
 
-int conjInMaxPD(TNoA* r, int n){
+
+listaEnc *conjInMaxPD(TNoA* r, int n){
 	if (r != NULL){
 		Ind **v = (Ind**)malloc((n+1) * sizeof(Ind));
-		v[0] = inicializaInd(0, 0, 0); //A primeira posicao representa NULL
+		v[0] = inicializaInd(0, 0, 0, 0); //A primeira posicao representa NULL
 		int position = 0;
-		preenchePosOrdem(v, r, &position);
-		for (int i = 0; i < n+1; i++){
+		preenchePosOrdem(v, r, &position); //preenche a estrutura
+		listaEnc *conjI = criaLista();
+		encontraConj(v, conjI, n); //a partir da estrutura encontra o conj
+		printf("Recorrencia: ");
+		for(int i =0; i < n+1; i++){
 			printf("%d ", v[i]->value);
 		}
 		printf("\n");
-		return v[n]->value;
+		for(int i = 0; i < n+1; i++)
+			free(v[i]);
+		return conjI;
 	}
 	return 0;
 }
+

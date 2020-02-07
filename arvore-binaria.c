@@ -12,7 +12,7 @@ void imprime_A(TNoA *nodo, int tab) {
         printf("-");
     }
     if (nodo != NULL) {
-        printf("%c\n", nodo->info);
+        printf("%d\n", nodo->info);
         imprime_A(nodo->esq, tab + 2);
         printf("\n");
         imprime_A(nodo->dir, tab + 2);
@@ -24,21 +24,46 @@ void posOrdem(TNoA* a){
 	if (a!= NULL){
 		posOrdem(a->esq);
 		posOrdem(a->dir);
-		printf("%c", a->info);
+		printf("%d", a->info);
 	}
 }
 
 
-TNoA *criaNo(char ch) {
+TNoA *criaNo(int a) {
     TNoA *novo;
     novo = (TNoA *) malloc(sizeof(TNoA));
-    novo->info = ch;
+    novo->info = a;
     novo->esq = NULL;
     novo->dir = NULL;
     return novo;
 }
 
 
-TNoA *criaArvoreAleatoria(TNoA *r, int *count, int n){
-	//TODO
+TNoA *insere(TNoA *r, int a){
+	if(r != NULL){
+		if(a > r->info)
+			r->dir = insere(r->dir, a);
+		else
+			r->esq = insere(r->esq, a);
+	}
+	else{
+		r = criaNo(a);
+	}
+	return r;
+}
+
+
+TNoA *criaArvoreAleatoria(TNoA *r, int n){
+	srand(time(NULL));
+	listaEnc *lista = criaLista();
+	for(int i = 1; i < n+1; i++){
+		insereIni(lista, i);
+	}
+	while(lista->qtdElem > 0){ //enquanto houver elementos na lista
+		int pos = rand() % lista->qtdElem; //sorteia uma posicao da lista
+		int value = removePos(lista, pos);
+		r = insere(r, value); //insere o elemento removido na arvore
+	}
+	free(lista);
+	return r;
 }
