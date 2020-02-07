@@ -4,8 +4,11 @@
 
 all: main
 
-main: arvore-binaria.o independent.o
-	gcc main.c -o main arvore-binaria.o independent.o
+main: lista-encadeada.o arvore-binaria.o independent.o
+	gcc main.c -o main lista-encadeada.o arvore-binaria.o independent.o
+
+lista-encadeada.o: lista-encadeada.c
+	gcc -c lista-encadeada.c
 
 arvore-binaria.o: arvore-binaria.c
 	gcc -c arvore-binaria.c
