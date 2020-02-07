@@ -12,3 +12,4 @@ void posOrdem(TNoA* a);
 TNoA *criaNo(int a);
 TNoA *insere(TNoA *r, int a);
 TNoA *criaArvoreAleatoria(TNoA *r, int n);
+void freeArvore(TNoA *r);

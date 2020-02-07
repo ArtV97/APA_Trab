@@ -51,7 +51,7 @@ int preenchePosOrdem(Ind **v, TNoA *r, int *pos){
 		filhos += v[v[*pos]->fEsq]->value;
 		filhos += v[v[*pos]->fDir]->value;
 		
-		if (netos > filhos){
+		if (netos >= filhos){
 			v[*pos]->value = netos;
 		}
 		else{
@@ -63,20 +63,26 @@ int preenchePosOrdem(Ind **v, TNoA *r, int *pos){
 }
 
 
-void encontraConj(Ind **v, listaEnc *conjI, int n){ //encontrando o conj independente
+void encontraConj(Ind **v, listaEnc *conjI, int n, int pai){ //encontrando o conj independente
 	if(n != 0){
-		if(v[n]->value == v[v[n]->fEsq]->value + v[v[n]->fDir]->value){
-			//adicionar filhos
-			encontraConj(v, conjI, v[n]->fEsq);
-			encontraConj(v, conjI, v[n]->fDir);
+		int netos = 1;
+		netos += v[v[v[n]->fEsq]->fEsq]->value;
+		netos += v[v[v[n]->fEsq]->fDir]->value;
+		netos += v[v[v[n]->fDir]->fEsq]->value;
+		netos += v[v[v[n]->fDir]->fDir]->value;
+		//buscaLista retorna -1 se o pai nao estiver na lista
+		if(v[n]->value == netos && buscaLista(conjI, pai) == -1){
+			//adicionar netos
+			insereIni(conjI, v[n]->elem);
+			encontraConj(v, conjI, v[v[n]->fEsq]->fEsq, v[v[n]->fEsq]->elem);
+			encontraConj(v, conjI, v[v[n]->fEsq]->fDir, v[v[n]->fEsq]->elem);
+			encontraConj(v, conjI, v[v[n]->fDir]->fEsq, v[v[n]->fDir]->elem);
+			encontraConj(v, conjI, v[v[n]->fDir]->fDir, v[v[n]->fDir]->elem);
 		}
 		else{
-			//adiciona netos
-			insereIni(conjI, v[n]->elem);
-			encontraConj(v, conjI, v[v[n]->fEsq]->fEsq);
-			encontraConj(v, conjI, v[v[n]->fEsq]->fDir);
-			encontraConj(v, conjI, v[v[n]->fDir]->fEsq);
-			encontraConj(v, conjI, v[v[n]->fDir]->fDir);
+			//adiciona filhos
+			encontraConj(v, conjI, v[n]->fEsq, v[n]->elem);
+			encontraConj(v, conjI, v[n]->fDir, v[n]->elem);
 		}
 	}
 }
@@ -89,8 +95,8 @@ listaEnc *conjInMaxPD(TNoA* r, int n){
 		int position = 0;
 		preenchePosOrdem(v, r, &position); //preenche a estrutura
 		listaEnc *conjI = criaLista();
-		encontraConj(v, conjI, n); //a partir da estrutura encontra o conj
-		printf("Recorrencia: ");
+		encontraConj(v, conjI, n, 0); //a partir da estrutura encontra o conj incluindo a raiz
+		printf("Estrutura da recorrencia: ");
 		for(int i =0; i < n+1; i++){
 			printf("%d ", v[i]->value);
 		}
@@ -99,6 +105,6 @@ listaEnc *conjInMaxPD(TNoA* r, int n){
 			free(v[i]);
 		return conjI;
 	}
-	return 0;
+	return criaLista();
 }
 

@@ -14,7 +14,7 @@ int main(){
     printf("Tamanho do maior conjunto independente: %d\n", results->qtdElem);
 	printf("Conjunto: ");
 	imprimeLista(results);
-	
+	freeArvore(raiz);
 	freeList(results);
 	getchar();
 	return 0;

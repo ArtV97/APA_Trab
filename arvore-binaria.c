@@ -64,6 +64,15 @@ TNoA *criaArvoreAleatoria(TNoA *r, int n){
 		int value = removePos(lista, pos);
 		r = insere(r, value); //insere o elemento removido na arvore
 	}
-	free(lista);
+	freeList(lista);
 	return r;
+}
+
+
+void freeArvore(TNoA *r){
+	if(r != NULL){
+		freeArvore(r->esq);
+		freeArvore(r->dir);
+		free(r);
+	}
 }

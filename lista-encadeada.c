@@ -45,6 +45,20 @@ void imprimeLista(listaEnc *l){
 	printf("\n");
 }
 
+int buscaLista(listaEnc *l, int a){
+	no *noAux = l->prim;
+	int i = -1;
+	while(noAux != NULL){
+		i++;
+		if(noAux->info == a){
+			return i;
+		}
+		noAux = noAux->prox;
+	}
+	return -1;
+}
+
+
 void freeList(listaEnc *l){
 	no *noAux = l->prim;
 	while(noAux != NULL){

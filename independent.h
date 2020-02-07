@@ -12,6 +12,5 @@ typedef struct independent{
 Ind *inicializaInd(int value, int elem, int fEsq, int fDir);
 int conjInMaxRecur(TNoA* r);
 int preenchePosOrdem(Ind **v, TNoA *r, int *pos);
-void encontraConj(Ind **v, listaEnc *conjI, int n);
+void encontraConj(Ind **v, listaEnc *conjI, int n, int pai);
 listaEnc *conjInMaxPD(TNoA* r, int n);
-//int *conjInMaxPD(TNoA* r, int n);

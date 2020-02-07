@@ -16,4 +16,5 @@ listaEnc *criaLista();
 int removePos(listaEnc *l, int pos);
 void insereIni(listaEnc *l, int a);
 void imprimeLista(listaEnc *l);
+int buscaLista(listaEnc *l, int a);
 void freeList(listaEnc *l);
